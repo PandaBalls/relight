@@ -283,7 +283,7 @@ g.openlime-expand {
 	position:absolute;
 	display:flex;
 	flex-direction:column;
-	justify-content:start;
+	justify-content:center;
 	top:0px;
 	left:0px;
 	height:100%;
@@ -334,6 +334,7 @@ g.openlime-expand {
 	border-radius:3px;
 	cursor:pointer;
 	text-decoration:none;
+	white-space: nowrap;
 }
 
 .openlime-layers-menu .openlime-entry:hover,

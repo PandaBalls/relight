@@ -10534,7 +10534,7 @@ void main() {
 				actions: {
 					home: { title: '重置视角(Home)', display: true, key: 'Home', task: (event) => { if (camera.boundingBox) camera.fitCameraBox(250); } },
 					fullscreen: { title: '全屏/缩小(F)', display: true, key: 'f', task: (event) => { this.toggleFullscreen(); } },
-					layers: { title: '显示模式(ESC)', display: true, key: 'Escape', task: (event) => { this.toggleLayers(); } },
+					layers: { title: '显示模式(M)', display: true, key: 'm', task: (event) => { this.toggleLayers(); } },
 					zoomin: { title: '放大', display: false, key: '+', task: (event) => { camera.deltaZoom(250, 1.25, 0, 0); } },
 					zoomout: { title: '缩小', display: false, key: '-', task: (event) => { camera.deltaZoom(250, 1 / 1.25, 0, 0); } },
 					rotate: { title: '旋转', display: false, key: 'r', task: (event) => { camera.rotate(250, -45); } },
@@ -11985,17 +11985,10 @@ vec4 data() {
 						break;
 
 					case 'diffuse':
-						if (this.colorspace == 'lrgb' || this.colorspace == 'rgb')
-							str += `
-vec4 diffuse = texture${gl2 ? '' : '2D'}(plane0, v_texcoord);
-float s = dot(light, normal);
-color = vec4(s * diffuse.xyz, 1);
-`;
-						else
-							str += `
+					str += `
 color = vec4(vec3(dot(light, normal)), 1);
 `;
-						break;
+					break;
 
 					case 'specular':
 					default: str += `
