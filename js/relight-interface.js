@@ -24,13 +24,13 @@ function RelightViewer(div, options) {
 		pagemap: false,
 		normals: 0,
 		actions: {
-			home:    { title: 'Home',       task: function(event) { t.centerAndScale(t.nav.zoomdelay); }        },
+			home:    { title: '视角重置',       task: function(event) { t.centerAndScale(t.nav.zoomdelay); }        },
 			zoomin:  { title: 'Zoom In',    task: function(event) { t.zoom(-t.nav.zoomstep, t.nav.zoomdelay); } },
 			zoomout: { title: 'Zoom Out',   task: function(event) { t.zoom(+t.nav.zoomstep, t.nav.zoomdelay); } },
 			rotate:  { title: 'Rotate',     task: function(event) { t.rotate(t.nav.zoomstep, 45); } },
-			light:   { title: 'Light',      task: function(event) { t.toggleLight(event); }                     },
-			normals: { title: 'Normals',     task: function(event) { t.toggleNormals(event); } },
-			full:    { title: 'Fullscreen', task: function(event) { t.toggleFullscreen(event); }                },
+			light:   { title: '光源控制',      task: function(event) { t.toggleLight(event); }                     },
+			normals: { title: '切换模式',     task: function(event) { t.toggleNormals(event); } },
+			full:    { title: '全屏/缩小', task: function(event) { t.toggleFullscreen(event); }                },
 			info:    { title: 'info',       task: function(event) { t.showInfo(); }                             }
 		},
 		scale: 0                     //size of a pixel in mm.
