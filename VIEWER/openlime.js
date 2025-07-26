@@ -10532,16 +10532,16 @@ void main() {
 				autoFit: true, //FIXME to be moved in the viewer?
 				//skinCSS: 'skin.css', // TODO: probably not useful
 				actions: {
-					home: { title: '重置视角(Home)', display: true, key: 'Home', task: (event) => { if (camera.boundingBox) camera.fitCameraBox(250); } },
-					fullscreen: { title: '全屏/缩小(F)', display: true, key: 'f', task: (event) => { this.toggleFullscreen(); } },
 					layers: { title: '显示模式(M)', display: true, key: 'm', task: (event) => { this.toggleLayers(); } },
+					light: { title: '光源控制(L)', display: 'auto', key: 'l', task: (event) => { this.toggleLightController(); } },
+					fullscreen: { title: '全屏/缩小(F)', display: true, key: 'f', task: (event) => { this.toggleFullscreen(); } },
+					snapshot: { title: '截图', display: true, task: (event) => { this.snapshot(); } }, //FIXME not work!
+					home: { title: '重置视角(Home)', display: false, key: 'Home', task: (event) => { if (camera.boundingBox) camera.fitCameraBox(250); } },
 					zoomin: { title: '放大', display: false, key: '+', task: (event) => { camera.deltaZoom(250, 1.25, 0, 0); } },
 					zoomout: { title: '缩小', display: false, key: '-', task: (event) => { camera.deltaZoom(250, 1 / 1.25, 0, 0); } },
 					rotate: { title: '旋转', display: false, key: 'r', task: (event) => { camera.rotate(250, -45); } },
-					light: { title: '光源控制(L)', display: 'auto', key: 'l', task: (event) => { this.toggleLightController(); } },
 					ruler: { title: '标尺', display: false, task: (event) => { this.toggleRuler(); } },
 					help: { title: '帮助(?)', display: false, key: '?', task: (event) => { this.toggleHelp(this.actions.help); }, html: '<p>Help here!</p>' }, //FIXME Why a boolean in toggleHelp?
-					snapshot: { title: '截图', display: false, task: (event) => { this.snapshot(); } }, //FIXME not work!
 				},
 				postInit: () => { },
 				pixelSize: null,

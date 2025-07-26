@@ -58,6 +58,11 @@
 			text-align: center;
 			display: none;
 		}
+
+		/* 隐藏左下角的比例尺 */
+		.openlime-scale {
+			display: none !important;
+		}
 	</style>
 </head>
 
@@ -76,23 +81,23 @@
 		function getProjectFromURL() {
 			const urlParams = new URLSearchParams(window.location.search);
 			const project = urlParams.get('prj');
-			
+
 			console.log('原始project参数:', project);
-			
+
 			// 如果没有指定项目，默认使用当前目录
 			if (!project) {
 				console.log('没有project参数，使用当前目录');
 				return '.';
 			}
-			
-			// 如果项目名称不包含路径分隔符，则认为是相对于上级目录的项目文件夹
-			// 例如: project=SCMDQ 会被解析为 ../SCMDQ
+
+			// 如果项目名称不包含路径分隔符，则认为是网站根域名下的RTI项目
+			// 例如: project=SCMDQ 会被解析为 /RTI/SCMDQ
 			if (!project.includes('/') && !project.includes('\\') && project !== '.') {
-				const result = `../${project}`;
-				console.log('添加../前缀，结果:', result);
+				const result = `/RTI/${project}`;
+				console.log('解析为绝对路径，结果:', result);
 				return result;
 			}
-			
+
 			// 否则直接使用提供的路径
 			console.log('直接使用提供的路径:', project);
 			return project;
@@ -127,7 +132,7 @@
 		async function autodetect(basePath) {
 			try {
 				console.log('开始检测RTI格式，基础路径:', basePath);
-				
+
 				let url = `${basePath}/plane_0.tzi`;
 				console.log('检测tarzoom格式，URL:', url);
 				let response = await fetch(url);
@@ -191,7 +196,7 @@
 		async function loadRTI(projectPath) {
 			try {
 				showLoading(`正在加载RTI项目: ${projectPath}`);
-				
+
 				// 清理之前的viewer
 				if (currentViewer) {
 					const container = document.getElementById('openlime');
@@ -199,12 +204,12 @@
 				}
 
 				console.log('正在加载RTI项目:', projectPath);
-				
+
 				// 检测RTI格式
 				showLoading('正在检测RTI格式...');
 				const layout = await autodetect(projectPath);
 				console.log('检测到的格式:', layout);
-				
+
 				// 检测法线贴图
 				showLoading('正在检测法线贴图...');
 				const normals = await autodetectNormals(layout, projectPath);
@@ -212,7 +217,12 @@
 
 				// 创建新的viewer
 				showLoading('正在初始化查看器...');
-				currentViewer = new OpenLIME.Viewer('#openlime', { background: 'black' });
+				currentViewer = new OpenLIME.Viewer('#openlime', { 
+					background: 'black',
+					canvas: {
+						preserveDrawingBuffer: true  // 启用绘制缓冲区保留，解决截图黑色问题
+					}
+				});
 
 				// 创建图层
 				const layer = new OpenLIME.Layer({
@@ -224,23 +234,25 @@
 
 				// 添加图层到viewer
 				currentViewer.canvas.addLayer('显示模式', layer);
-				
+
 				// 设置皮肤
 				OpenLIME.Skin.setUrl('skin.svg');
-				
+
 				// 创建UI
-				const ui = new OpenLIME.UIBasic(currentViewer, { 
-					skin: 'skin.svg', 
-					showLightDirections: true 
+				const ui = new OpenLIME.UIBasic(currentViewer, {
+					skin: 'skin.svg',
+					showLightDirections: true,
+					pixelSize: 1.0  // 设置像素大小，用于测量工具显示数值
 				});
-				
+
 				ui.actions.light.active = true;
 				ui.actions.layers.display = true;
+				ui.actions.snapshot.display = true; // 启用截图功能
 				currentViewer.camera.maxFixedZoom = 1;
-				
+
 				hideLoading();
 				console.log('RTI项目加载成功');
-				
+
 			} catch (error) {
 				console.error('加载RTI项目失败:', error);
 				showError(`加载RTI项目失败: ${error.message}`);
@@ -253,10 +265,10 @@
 				// 从URL获取项目路径
 				const projectPath = getProjectFromURL();
 				console.log('URL参数获取的项目路径:', projectPath);
-				
+
 				// 加载项目
 				await loadRTI(projectPath);
-				
+
 			} catch (error) {
 				console.error('初始化失败:', error);
 				showError(`初始化失败: ${error.message}`);
