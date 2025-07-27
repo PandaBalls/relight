@@ -74,7 +74,21 @@
 	<script type="module" src="openlime.js"></script>
 
 	<script>
+		// ========================================
+		// 🔧 配置参数区域 - 可根据需要修改
+		// ========================================
+		
+		/**
+		 * 🌐 RTI项目基础URL配置
+		 * 这是RTI项目的基础路径，所有项目都会在此路径下查找
+		 * 例如：如果baseURL为'/RTI'，prj参数为'SCMDQ'，
+		 * 则最终项目路径为：/RTI/SCMDQ
+		 */
+		const BASE_URL = 'http://127.0.0.1:5500/';  // 👈 在这里修改RTI项目的基础路径
+		
+		// ========================================
 		// 全局变量
+		// ========================================
 		let currentViewer = null;
 
 		// 从URL参数获取项目路径
@@ -83,6 +97,7 @@
 			const project = urlParams.get('prj');
 
 			console.log('原始project参数:', project);
+			console.log('配置的BASE_URL:', BASE_URL);
 
 			// 如果没有指定项目，默认使用当前目录
 			if (!project) {
@@ -90,15 +105,17 @@
 				return '.';
 			}
 
-			// 如果项目名称不包含路径分隔符，则认为是网站根域名下的RTI项目
-			// 例如: project=SCMDQ 会被解析为 /RTI/SCMDQ
+			// 如果项目名称不包含路径分隔符，则认为是BASE_URL下的RTI项目
+			// 例如: project=SCMDQ 会被解析为 BASE_URL/SCMDQ
 			if (!project.includes('/') && !project.includes('\\') && project !== '.') {
-				const result = `/RTI/${project}`;
-				console.log('解析为绝对路径，结果:', result);
+				// 确保BASE_URL和project之间有正确的路径分隔符
+				const separator = BASE_URL.endsWith('/') ? '' : '/';
+				const result = `${BASE_URL}${separator}${project}`;
+				console.log('使用BASE_URL构建路径，结果:', result);
 				return result;
 			}
 
-			// 否则直接使用提供的路径
+			// 否则直接使用提供的路径（完整路径或相对路径）
 			console.log('直接使用提供的路径:', project);
 			return project;
 		}
